@@ -126,24 +126,33 @@ test_transform = T.Compose([
 
 
 
+
 @st.cache_resource
 def load_model():
-    """Load the pre-trained AdaIN model"""
+    """Load the pre-trained AdaIN model from GitHub Release"""
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = Model()
     
-    # Try to load the model if file exists
+    MODEL_PATH = "model.pth"
+    MODEL_URL = "https://github.com/tumblr-byte/adain-style-transfer-streamlit/releases/download/v1.0/model.pth"
+
+    # Download model if not present
+    if not os.path.exists(MODEL_PATH):
+        st.info("📥 Downloading pre-trained model from GitHub...")
+        import urllib.request
+        urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+        st.success("✅ Model downloaded successfully!")
+
+    # Load weights
     try:
-        if os.path.exists('model.pth'):
-            model.load_state_dict(torch.load('model.pth', map_location=device))
-            model.eval()
-            st.success("✅ Pre-trained model loaded successfully!")
-        else:
-            st.warning("⚠️ model.pth not found. Using initialized model (results may not be optimal)")
+        model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+        model.eval()
+        st.success("✅ Pre-trained model loaded successfully!")
     except Exception as e:
         st.error(f"❌ Error loading model: {e}")
     
     return model.to(device), device
+
 
 def preprocess_image(image):
     """Preprocess image for model input"""
@@ -371,4 +380,5 @@ def main():
         """)
 
 if __name__ == "__main__":
+
     main()
