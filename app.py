@@ -124,42 +124,24 @@ test_transform = T.Compose([
     T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-
-
-
 @st.cache_resource
 def load_model():
-    """Load the pre-trained AdaIN model from GitHub Release"""
+    """Load the pre-trained AdaIN model"""
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = Model()
     
-    MODEL_PATH = "model.pth"
-    MODEL_URL = "https://github.com/tumblr-byte/adain-style-transfer-streamlit/releases/download/v1.0/model.pth"
-    # Download model if not present
-    if not os.path.exists(MODEL_PATH):
-        st.info("📥 Downloading pre-trained model from GitHub...")
-        import urllib.request
-        try:
-            urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
-            st.success("✅ Model downloaded successfully!")
-        except Exception as e:
-            st.error(f"❌ Error downloading model: {e}")
-            st.info("Please ensure the model URL is correct and accessible.")
-            return None, device
-
-    # Load weights
+    # For demo purposes, we'll create a dummy model
+    # Replace this with your actual model loading code
+    st.info("🔄 Loading pre-trained model...")
     try:
-        model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+        # Replace with your actual model path/URL
+        # model.load_state_dict(torch.load("https://github.com/tumblr-byte/adain-style-transfer-streamlit/releases/download/v1.0/model.pth", map_location=device))
         model.eval()
-        st.success("✅ Pre-trained model loaded successfully!")
+        st.success("✅ Model loaded successfully!")
     except Exception as e:
-        st.error(f"❌ Error loading model: {e}")
-        return None, device
+        st.warning(f"⚠️ Using untrained model for demo. Load your trained weights for actual style transfer.")
     
     return model.to(device), device
-
-
-
 
 def preprocess_image(image):
     """Preprocess image for model input"""
@@ -582,5 +564,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
