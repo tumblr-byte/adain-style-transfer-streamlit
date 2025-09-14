@@ -5,3 +5,5 @@ Pillow
 numpy
 opencv-python-headless>=4.8.1.78,<5.0
 
+
+imageio[ffmpeg]
