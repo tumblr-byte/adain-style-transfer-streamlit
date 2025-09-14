@@ -3,4 +3,5 @@ torch
 torchvision
 Pillow
 numpy
-opencv-python
+opencv-python-headless>=4.8.1.78,<5.0
+
